@@ -18,6 +18,7 @@ const login = async (req, res) => {
             isAdmin:user.isAdmin
         },process.env.JWT_SECRET_KEY,{expiresIn:'3d'})
         const {password,...others} = user._doc;
+        res.cookie("token", accessToken, { httpOnly: false, secure: true, sameSite: "none" });
         res.status(200).json({others,accessToken})
     } catch (error) {
         res.status(500).json(error.message)
