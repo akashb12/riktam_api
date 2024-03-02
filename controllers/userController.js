@@ -19,11 +19,17 @@ const login = async (req, res) => {
         },process.env.JWT_SECRET_KEY,{expiresIn:'3d'})
         const {password,...others} = user._doc;
         res.cookie("token", accessToken, { httpOnly: false, secure: true, sameSite: "none" });
-        res.status(200).json({others,accessToken})
+        others.accessToken = accessToken
+        res.status(200).json({others})
     } catch (error) {
         res.status(500).json(error.message)
     }
 }
+const logout = async (req,res) => {
+    res.cookie("token", "", { httpOnly: false, secure: true, sameSite: "none" });
+    res.status(200).json({ data: "logout successful" });
+}
 module.exports = {
-    login:login
+    login:login,
+    logout:logout
 }
