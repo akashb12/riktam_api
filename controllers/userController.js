@@ -29,7 +29,25 @@ const logout = async (req,res) => {
     res.cookie("token", "", { httpOnly: false, secure: true, sameSite: "none" });
     res.status(200).json({ data: "logout successful" });
 }
+
+const serchUsers = async (req,res) => {
+    try {
+        const serachName = req.query.name;
+        const users = await User.find({
+            $or: [
+                { name: { $regex: serachName, $options: "i" } },
+                { email: { $regex: serachName, $options: "i" } }
+            ]
+        }).find({
+            _id: { $ne: req.user.id }
+        });
+        res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
 module.exports = {
     login:login,
-    logout:logout
+    logout:logout,
+    serchUsers:serchUsers
 }
