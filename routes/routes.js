@@ -1,5 +1,5 @@
 const express = require('express');
-const {login, logout, serchUsers} = require('../controllers/userController'); 
+const {login, logout, searchUsers, getUsersForGroup} = require('../controllers/userController'); 
 const {verifyTokenAndAuthorization, verifyTokenAndAdmin, verifyToken} = require('../middleware/auth');
 const { getAllUsers, registerUser, updateUser } = require('../controllers/adminController');
 const { createGroupChat, addUsersToGroup, removeFromGroup, fetchUserChats } = require('../controllers/chatController');
@@ -8,7 +8,7 @@ const router = express.Router();
 // auth routes
 router.post('/user/login',login);
 router.post('/user/logout',logout);
-router.get('/user/search',verifyToken,serchUsers);
+router.get('/user/getUsers',verifyToken,getUsersForGroup);
 
 // admin routes
 router.post('/admin/register',verifyTokenAndAdmin,registerUser);

@@ -7,7 +7,8 @@ const createGroupChat = async(req,res) => {
     if(!req.body.users || ! req.body.name) {
         throw new Error('Please Fill All Fields');
     }
-    let users = JSON.parse(req.body.users);
+    let users = JSON.parse(req.body.users).map((item) => item._id);
+    users.push(req.user.id);
     if(users.length < 2) {
         throw new Error('Atleast 2 users are required for group chat');
     }
@@ -19,7 +20,7 @@ const createGroupChat = async(req,res) => {
     })
     const createGroup = await newGroup.save();
     const getGroupChat = await Chat.findOne({_id:createGroup._id}).populate("users","-password").populate('groupAdmin','-password');
-    res.status(200).json(getGroupChat);
+    res.status(201).json(getGroupChat);
    } catch (error) {
     res.status(500).json(error.message)
    }

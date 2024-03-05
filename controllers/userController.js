@@ -30,7 +30,7 @@ const logout = async (req,res) => {
     res.status(200).json({ data: "logout successful" });
 }
 
-const serchUsers = async (req,res) => {
+const searchUsers = async (req,res) => {
     try {
         const serachName = req.query.name;
         const users = await User.find({
@@ -39,7 +39,20 @@ const serchUsers = async (req,res) => {
                 { email: { $regex: serachName, $options: "i" } }
             ]
         }).find({
-            _id: { $ne: req.user.id }
+            _id: { $ne: req.user.id },
+            isAdmin:false
+        });
+        res.status(200).json(users)
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+const getUsersForGroup = async (req,res) => {
+    try {
+        const users = await User.find({
+            _id: { $ne: req.user.id },
+            isAdmin:false
         });
         res.status(200).json(users)
     } catch (error) {
@@ -49,5 +62,6 @@ const serchUsers = async (req,res) => {
 module.exports = {
     login:login,
     logout:logout,
-    serchUsers:serchUsers
+    searchUsers:searchUsers,
+    getUsersForGroup:getUsersForGroup
 }
