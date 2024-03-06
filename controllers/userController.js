@@ -53,7 +53,7 @@ const getUsersForGroup = async (req,res) => {
         const users = await User.find({
             _id: { $ne: req.user.id },
             isAdmin:false
-        });
+        }).select('-password');
         res.status(200).json(users)
     } catch (error) {
         res.status(500).json(error.message)

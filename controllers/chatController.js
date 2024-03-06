@@ -45,21 +45,18 @@ const fetchUserChats = async (req, res) => {
     }
 }
 
-const addUsersToGroup = async (req, res) => {
+const updateUsersInGroup = async (req, res) => {
     try {
-        const add = await Chat.findByIdAndUpdate(req.params.id, {
-            $push: { users: req.body.userId }
-        }, { new: true }).populate('users', '-password').populate('groupAdmin', 'password');
-        res.status(200).json(add);
-    } catch (error) {
-        res.status(500).json(error.message);
-    }
-}
-const removeFromGroup = async (req, res) => {
-    try {
-        const add = await Chat.findByIdAndUpdate(req.params.id, {
-            $pull: { users: req.body.userId }
-        }, { new: true }).populate('users', '-password').populate('groupAdmin', 'password');
+        if(!req.body.users) {
+            throw new Error('No users found');
+        }
+        let users = JSON.parse(req.body.users).map((item) => item._id);
+        users.push(req.user.id);
+        if(users.length < 2) {
+            throw new Error('Atleast 2 users are required for group chat');
+        }
+        const add = await Chat.findByIdAndUpdate(req.params.id,
+            { users: users }, { new: true }).populate('users', '-password').populate('groupAdmin', 'password');
         res.status(200).json(add);
     } catch (error) {
         res.status(500).json(error.message);
@@ -68,6 +65,5 @@ const removeFromGroup = async (req, res) => {
 module.exports={
     createGroupChat:createGroupChat,
     fetchUserChats:fetchUserChats,
-    addUsersToGroup:addUsersToGroup,
-    removeFromGroup:removeFromGroup
+    updateUsersInGroup:updateUsersInGroup
 }
