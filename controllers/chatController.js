@@ -55,9 +55,18 @@ const updateUsersInGroup = async (req, res) => {
         if(users.length < 2) {
             throw new Error('Atleast 2 users are required for group chat');
         }
-        const add = await Chat.findByIdAndUpdate(req.params.id,
+        const add = await Chat.findByIdAndUpdate(req.params.chatId,
             { users: users }, { new: true }).populate('users', '-password').populate('groupAdmin', 'password');
         res.status(200).json(add);
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
+}
+
+const deleteGroup = async (req,res) => {
+    try {
+        await Chat.findByIdAndDelete(req.params.chatId);
+        res.status(204).json('Chat deleted');
     } catch (error) {
         res.status(500).json(error.message);
     }
@@ -65,5 +74,6 @@ const updateUsersInGroup = async (req, res) => {
 module.exports={
     createGroupChat:createGroupChat,
     fetchUserChats:fetchUserChats,
-    updateUsersInGroup:updateUsersInGroup
+    updateUsersInGroup:updateUsersInGroup,
+    deleteGroup:deleteGroup
 }

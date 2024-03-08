@@ -2,7 +2,8 @@ const express = require('express');
 const {login, logout, searchUsers, getUsersForGroup} = require('../controllers/userController'); 
 const {verifyTokenAndAuthorization, verifyTokenAndAdmin, verifyToken} = require('../middleware/auth');
 const { getAllUsers, registerUser, updateUser } = require('../controllers/adminController');
-const { createGroupChat, fetchUserChats, updateUsersInGroup } = require('../controllers/chatController');
+const { createGroupChat, fetchUserChats, updateUsersInGroup, deleteGroup } = require('../controllers/chatController');
+const { sendMessage, fetchMessages } = require('../controllers/messageController');
 const router = express.Router();
 
 // auth routes
@@ -20,7 +21,12 @@ router.get('/admin/getAllUsers',verifyTokenAndAdmin,getAllUsers);
 // router.get('/chat/get',verifyToken,);
 router.post('/chat/createGroup',verifyToken,createGroupChat);
 router.get('/chat/fetchChats',verifyToken,fetchUserChats);
-router.put('/chat/updateGroup/:id',verifyToken,updateUsersInGroup);
+router.put('/chat/updateGroup/:chatId',verifyToken,updateUsersInGroup);
+router.delete('/chat/deleteGroup/:chatId',verifyToken,deleteGroup);
+
+// message controller
+router.post('/message/sendMessage/:chatId',verifyToken,sendMessage);
+router.get('/message/fetchMessages/:chatId',verifyToken,fetchMessages);
 
 
 module.exports = router;
