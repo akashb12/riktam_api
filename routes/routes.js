@@ -3,7 +3,7 @@ const {login, logout, searchUsers, getUsersForGroup} = require('../controllers/u
 const {verifyTokenAndAuthorization, verifyTokenAndAdmin, verifyToken} = require('../middleware/auth');
 const { getAllUsers, registerUser, updateUser } = require('../controllers/adminController');
 const { createGroupChat, fetchUserChats, updateUsersInGroup, deleteGroup } = require('../controllers/chatController');
-const { sendMessage, fetchMessages } = require('../controllers/messageController');
+const { sendMessage, fetchMessages, readMessage, likeMessage } = require('../controllers/messageController');
 const router = express.Router();
 
 // auth routes
@@ -27,6 +27,8 @@ router.delete('/chat/deleteGroup/:chatId',verifyToken,deleteGroup);
 // message controller
 router.post('/message/sendMessage/:chatId',verifyToken,sendMessage);
 router.get('/message/fetchMessages/:chatId',verifyToken,fetchMessages);
+router.post('/message/readMessage/:messageId',verifyToken,readMessage);
+router.post('/message/likeMessage/:messageId',verifyToken,likeMessage);
 
 
 module.exports = router;
