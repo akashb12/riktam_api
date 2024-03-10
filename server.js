@@ -55,6 +55,13 @@ io.on("connection", (socket) => {
             socket.in(user).emit('likeRecieved',newMessage);
         });
     })
+
+    socket.on('updateGroup',(groupData) => {
+        if(!groupData.users) return console.log('no users found');
+        groupData.users.forEach(user => {
+            socket.in(user._id).emit('groupUpdated',groupData);
+        });
+    })
     
     socket.off("setup", () => {
         console.log("USER DISCONNECTED");

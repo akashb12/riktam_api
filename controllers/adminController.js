@@ -38,7 +38,7 @@ const updateUser = async (req,res) => {
 
 const getAllUsers = async (req,res) => {
     try {
-        let users = await User.find({isAdmin:false}).select('-password')
+        let users = await User.find({isAdmin:false}).select('-password').sort({ createdAt: -1 })
         if(!users || !users.length) res.status(403).json("No Users Found");
         res.status(200).json(users)
     } catch (error) {
